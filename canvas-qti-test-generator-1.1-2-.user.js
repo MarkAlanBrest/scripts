@@ -7,6 +7,7 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @grant        GM_xmlhttpRequest
+// @grant        unsafeWindow
 // @connect      api.anthropic.com
 // @run-at       document-idle
 // @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-qti-test-generator-1.1-2-.user.js

@@ -8,6 +8,7 @@
 // @grant        GM_setValue
 // @grant        GM_xmlhttpRequest
 // @grant        GM_deleteValue
+// @grant        unsafeWindow
 // @connect      api.anthropic.com
 // @run-at       document-idle
 // @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-content-builder-1.0.user.js

@@ -6,6 +6,7 @@
 // @match        https://*.instructure.com/*
 // @grant        GM_getValue
 // @grant        GM_setValue
+// @grant        unsafeWindow
 // @run-at       document-idle
 // @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-email-storage-center-4.0-2-.user.js
 // @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-email-storage-center-4.0-2-.user.js
