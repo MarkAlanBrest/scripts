@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canvas AI Tools — Install Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #181c24;
+    --border: #1f2430;
+    --accent: #3b82f6;
+    --accent2: #f59e0b;
+    --accent3: #10b981;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --highlight: #ffffff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(59,130,246,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59,130,246,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Glow orbs */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.18;
+  }
+  .orb-1 { width: 600px; height: 600px; background: #3b82f6; top: -200px; left: -200px; animation: drift1 20s ease-in-out infinite; }
+  .orb-2 { width: 500px; height: 500px; background: #f59e0b; bottom: -100px; right: -100px; animation: drift2 25s ease-in-out infinite; }
+  .orb-3 { width: 400px; height: 400px; background: #10b981; top: 40%; left: 40%; animation: drift3 18s ease-in-out infinite; opacity: 0.1; }
+
+  @keyframes drift1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(80px,60px)} }
+  @keyframes drift2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-60px,-80px)} }
+  @keyframes drift3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,-40px)} }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 24px 100px;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 64px;
+    animation: fadeUp 0.8s ease both;
+  }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .eyebrow::before, .eyebrow::after {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent));
+  }
+  .eyebrow::after { background: linear-gradient(90deg, var(--accent), transparent); }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.2rem, 6vw, 3.6rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--highlight);
+    margin-bottom: 20px;
+  }
+  h1 span {
+    background: linear-gradient(135deg, #3b82f6, #a78bfa, #f59e0b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: var(--muted);
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* Step label */
+  .step-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 500;
+    font-family: 'DM Mono', monospace;
+  }
+  .step-num.blue { background: rgba(59,130,246,0.2); color: var(--accent); border: 1px solid rgba(59,130,246,0.3); }
+  .step-num.amber { background: rgba(245,158,11,0.2); color: var(--accent2); border: 1px solid rgba(245,158,11,0.3); }
+  .step-num.green { background: rgba(16,185,129,0.15); color: var(--accent3); border: 1px solid rgba(16,185,129,0.25); }
+
+  /* Cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    animation: fadeUp 0.6s ease both;
+  }
+  .card:hover {
+    border-color: rgba(59,130,246,0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+  }
+
+  /* Featured cards */
+  .card.featured-tamper {
+    border-color: rgba(59,130,246,0.35);
+    background: linear-gradient(135deg, rgba(59,130,246,0.07) 0%, var(--surface) 60%);
+  }
+  .card.featured-tamper:hover { border-color: rgba(59,130,246,0.6); }
+
+  .card.featured-dash {
+    border-color: rgba(245,158,11,0.3);
+    background: linear-gradient(135deg, rgba(245,158,11,0.06) 0%, var(--surface) 60%);
+  }
+  .card.featured-dash:hover { border-color: rgba(245,158,11,0.55); }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+
+  .icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .icon.blue { background: rgba(59,130,246,0.15); border: 1px solid rgba(59,130,246,0.25); }
+  .icon.amber { background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.25); }
+  .icon.green { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.2); }
+  .icon.violet { background: rgba(139,92,246,0.12); border: 1px solid rgba(139,92,246,0.2); }
+  .icon.rose { background: rgba(244,63,94,0.12); border: 1px solid rgba(244,63,94,0.2); }
+  .icon.cyan { background: rgba(6,182,212,0.12); border: 1px solid rgba(6,182,212,0.2); }
+  .icon.orange { background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.2); }
+  .icon.teal { background: rgba(20,184,166,0.12); border: 1px solid rgba(20,184,166,0.2); }
+  .icon.sky { background: rgba(14,165,233,0.12); border: 1px solid rgba(14,165,233,0.2); }
+
+  .card-title-group { flex: 1; }
+
+  .card-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--highlight);
+    margin-bottom: 3px;
+    letter-spacing: -0.01em;
+  }
+
+  .card-version {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .card-desc {
+    font-size: 0.875rem;
+    color: #9ca3af;
+    line-height: 1.65;
+    margin-bottom: 18px;
+  }
+
+  /* Tags */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.08em;
+  }
+  .tag.blue { background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.2); }
+  .tag.green { background: rgba(16,185,129,0.1); color: #34d399; border: 1px solid rgba(16,185,129,0.18); }
+  .tag.amber { background: rgba(245,158,11,0.1); color: #fbbf24; border: 1px solid rgba(245,158,11,0.18); }
+  .tag.violet { background: rgba(139,92,246,0.1); color: #a78bfa; border: 1px solid rgba(139,92,246,0.18); }
+  .tag.rose { background: rgba(244,63,94,0.1); color: #fb7185; border: 1px solid rgba(244,63,94,0.18); }
+  .tag.cyan { background: rgba(6,182,212,0.1); color: #22d3ee; border: 1px solid rgba(6,182,212,0.18); }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(59,130,246,0.3);
+  }
+  .btn-primary:hover {
+    background: #2563eb;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(59,130,246,0.45);
+  }
+  .btn-amber {
+    background: var(--accent2);
+    color: #000;
+    box-shadow: 0 4px 16px rgba(245,158,11,0.3);
+  }
+  .btn-amber:hover {
+    background: #d97706;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(245,158,11,0.45);
+  }
+  .btn-ghost {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover {
+    background: #1f2430;
+    border-color: rgba(59,130,246,0.3);
+    transform: translateY(-1px);
+  }
+
+  .btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+  .btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* Section divider */
+  .section-gap { margin-top: 48px; }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Notice box */
+  .notice {
+    background: rgba(59,130,246,0.07);
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 0.82rem;
+    color: #93c5fd;
+    line-height: 1.6;
+    margin-bottom: 36px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    animation: fadeUp 0.6s ease both;
+  }
+  .notice-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  /* Animation delays for staggered reveals */
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.3s; }
+  .delay-4 { animation-delay: 0.4s; }
+  .delay-5 { animation-delay: 0.5s; }
+  .delay-6 { animation-delay: 0.6s; }
+  .delay-7 { animation-delay: 0.7s; }
+  .delay-8 { animation-delay: 0.8s; }
+  .delay-9 { animation-delay: 0.9s; }
+  .delay-10 { animation-delay: 1.0s; }
+  .delay-11 { animation-delay: 1.1s; }
+  .delay-12 { animation-delay: 1.2s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    margin-top: 72px;
+    color: var(--muted);
+    font-size: 0.78rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 600px) {
+    .wrapper { padding: 40px 16px 80px; }
+    .card { padding: 22px 20px; }
+    .card-header { gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<div class="wrapper">
+
+  <header>
+    <div class="eyebrow">Canvas AI Toolkit</div>
+    <h1>Install Your<br><span>AI-Powered Tools</span></h1>
+    <p class="subtitle">A curated suite of userscripts that supercharge Canvas LMS with AI grading, content generation, scheduling, and more.</p>
+  </header>
+
+  <!-- STEP 1: Tampermonkey -->
+  <div class="step-label delay-1">
+    <span class="step-num blue">1</span> Install the extension first
+  </div>
+
+  <div class="card featured-tamper delay-2">
+    <div class="card-header">
+      <div class="icon blue">🐵</div>
+      <div class="card-title-group">
+        <div class="card-name">Tampermonkey</div>
+        <div class="card-version">Browser Extension — Required</div>
+      </div>
+    </div>
+    <p class="card-desc">
+      Tampermonkey is the browser extension that runs all the scripts below. It must be installed before anything else will work. It's free, trusted by millions, and available for Chrome, Firefox, Edge, and Safari. Once installed, clicking any "Install Script" button below will automatically prompt you to add it.
+    </p>
+    <div class="tags">
+      <span class="tag blue">Chrome</span>
+      <span class="tag blue">Firefox</span>
+      <span class="tag blue">Edge</span>
+      <span class="tag green">Free</span>
+      <span class="tag amber">Required</span>
+    </div>
+    <div class="btn-row">
+      <a class="btn btn-primary" href="https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        Chrome Web Store
+      </a>
+      <a class="btn btn-ghost" href="https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Firefox Add-ons
+      </a>
+      <a class="btn btn-ghost" href="https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd" target="_blank">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Edge Add-ons
+      </a>
+    </div>
+  </div>
+
+  <!-- STEP 2: Dashboard -->
+  <div class="section-gap">
+    <div class="step-label delay-3">
+      <span class="step-num amber">2</span> Install the dashboard — your command center
+    </div>
+
+    <div class="card featured-dash delay-4">
+      <div class="card-header">
+        <div class="icon amber">🎛️</div>
+        <div class="card-title-group">
+          <div class="card-name">Canvas Tool Dashboard</div>
+          <div class="card-version">v4.3.1 — Compact Premium UI + AI Popups + Backup/Restore</div>
+        </div>
+      </div>
+      <p class="card-desc">
+        The central hub for all your Canvas tools. Features a sleek compact UI that floats over any Canvas page, giving you one-click access to every script in this suite. Includes AI-powered popup assistants for quick answers, a full backup and restore system to protect your settings, and a unified settings panel — so you manage everything from one place without switching tabs.
+      </p>
+      <div class="tags">
+        <span class="tag amber">Command Center</span>
+        <span class="tag blue">AI Popups</span>
+        <span class="tag green">Backup &amp; Restore</span>
+        <span class="tag violet">Premium UI</span>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-amber" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-tool-dashboard-compact-premium-ui-ai-popups-backup-restore-4.3.1.user.js" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Install Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: Scripts -->
+  <div class="section-gap">
+    <div class="step-label delay-5">
+      <span class="step-num green">3</span> Install the individual tools
+    </div>
+
+    <div class="notice delay-5">
+      <span class="notice-icon">💡</span>
+      <span>Click any <strong>Install Script</strong> button below. Tampermonkey will open a confirmation page — just click <strong>Install</strong> to confirm. You can install as many or as few as you need.</span>
+    </div>
+
+    <!-- AI Grader -->
+    <div class="card delay-5">
+      <div class="card-header">
+        <div class="icon violet">🤖</div>
+        <div class="card-title-group">
+          <div class="card-name">AI Grader — Claude Edition</div>
+          <div class="card-version">v5.2</div>
+        </div>
+      </div>
+      <p class="card-desc">
+        Harnesses the power of Claude AI to assist with grading student submissions directly inside Canvas SpeedGrader. Analyzes written responses against your rubric, suggests scores with reasoning, flags areas of concern, and generates personalized feedback comments — dramatically cutting grading time while keeping your voice and standards intact.
+      </p>
+      <div class="tags">
+        <span class="tag violet">Claude AI</span>
+        <span class="tag blue">SpeedGrader</span>
+        <span class="tag green">Rubric Analysis</span>
+        <span class="tag amber">Auto Feedback</span>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-ghost" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/aigrader-claude-edition-5.2.user.js" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Install Script
+        </a>
+      </div>
+    </div>
+
+    <!-- AI Module Builder -->
+    <div class="card delay-6">
+      <div class="card-header">
+        <div class="icon blue">🏗️</div>
+        <div class="card-title-group">
+          <div class="card-name">Canvas AI Module Builder</div>
+          <div class="card-version">v4.0.0 — Direct API Insert</div>
+        </div>
+      </div>
+      <p class="card-desc">
+        Generates complete Canvas course modules using AI. Describe your learning objectives, and the tool automatically creates structured module outlines, pages, discussion prompts, and assignment descriptions — inserting them directly into your course via the Canvas API. Perfect for rapid course building or scaffolding new units from scratch.
+      </p>
+      <div class="tags">
+        <span class="tag blue">Course Builder</span>
+        <span class="tag violet">AI Generation</span>
+        <span class="tag cyan">API Insert</span>
+        <span class="tag green">Modules</span>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-ghost" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-ai-module-builder-direct-api-insert-4.0.0-3-.user.js" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Install Script
+        </a>
+      </div>
+    </div>
+
+    <!-- Content Builder -->
+    <div class="card delay-7">
+      <div class="card-header">
+        <div class="icon green">📝</div>
+        <div class="card-title-group">
+          <div class="card-name">Canvas Content Builder</div>
+          <div class="card-version">v1.0</div>
+        </div>
+      </div>
+      <p class="card-desc">
+        A rich inline editor for creating and formatting Canvas page content without leaving your course. Provides templates, formatting shortcuts, and AI-assisted writing suggestions to help you produce polished course pages, syllabi, and reading materials faster — no copy-pasting between documents needed.
+      </p>
+      <div class="tags">
+        <span class="tag green">Page Editor</span>
+        <span class="tag blue">Templates</span>
+        <span class="tag amber">AI Writing</span>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-ghost" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-content-builder-1.0.user.js" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Install Script
+        </a>
+      </div>
+    </div>
+
+    <!-- Email System -->
+    <div class="card delay-8">
+      <div class="card-header">
+        <div class="icon cyan">✉️</div>
+        <div class="card-title-group">
+          <div class="card-name">Canvas Email System</div>
+          <div class="card-version">v1.0.0</div>
+        </div>
+      </div>
+      <p class="card-desc">
+        Upgrades Canvas's built-in messaging with a full-featured email-style interface. Supports bulk messaging to filtered student groups, AI-drafted message templates, message scheduling, and a searchable sent history. Ideal for instructors managing large classes who need efficient, professional communication tools inside Canvas.
+      </p>
+      <div class="tags">
+        <span class="tag cyan">Messaging</span>
+        <span class="tag blue">Bulk Send</span>
+        <span class="tag violet">AI Drafts</span>
+        <span class="tag green">Scheduling</span>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-ghost" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-email-system-1.0.0-2-.user.js" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Install Script
+        </a>
+      </div>
+    </div>
+
+    <!-- Email Storage Center -->
+    <div class="card delay-8">
+      <div class="card-header">
+        <div class="icon cyan">📬</div>
+        <div class="card-title-group">
+          <div class="card-name">Canvas Email Storage Center</div>
+          <div class="card-version">v4.0</div>
+        </div>
+      </div>
+      <p class="card-desc">
+        Quick-send pre-written emails in Canvas Conversations. Store and organize your frequently used email templates, quickly insert them into Canvas messages, and manage a library of ready-to-send communications for student outreach, announcements, and follow-ups.
+      </p>
+      <div class="tags">
+        <span class="tag cyan">Templates</span>
+        <span class="tag blue">Quick Send</span>
+        <span class="tag green">Storage</span>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-ghost" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-email-storage-center-4.0-2-.user.js" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Install Script
+        </a>
+      </div>
+    </div>
+
+    <!-- Math Question Builder -->
+    <div class="card delay-9">
+      <div class="card-header">
+        <div class="icon amber">📐</div>
+        <div class="card-title-group">
+          <div class="card-name">Canvas Math Question Builder</div>
+          <div class="card-version">v7.1.0</div>
+        </div>
+      </div>
+      <p class="card-desc">
+        Specialized tool for creating math and science quiz questions directly in Canvas. Supports LaTeX equation rendering, formula input, variable randomization for unique per-student versions, and AI generation of practice problems at adjustable difficulty levels. Works seamlessly with Canvas Quizzes and New Quizzes formats.
+      </p>
+      <div class="tags">
+        <span class="tag amber">Math &amp; Science</span>
+        <span class="tag blue">LaTeX</span>
+        <span class="tag violet">Randomization</span>
+        <span class="tag green">Quiz Builder</span>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-ghost" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-math-question-builder-7.1.0.user.js" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Install Script
+        </a>
+      </div>
+    </div>
+
+    <!-- QTI Test Generator -->
+    <div class="card delay-10">
+      <div class="card-header">
+        <div class="icon rose">🧪</div>
+        <div class="card-title-group">
+          <div class="card-name">Canvas QTI Test Generator</div>
+          <div class="card-version">v1.1</div>
+        </div>
+      </div>
+      <p class="card-desc">
+        Generates QTI-compliant test files that can be imported directly into Canvas as full quizzes. Paste in question banks, document text, or topic descriptions, and the tool formats and exports everything as a proper QTI package — saving hours of manual quiz entry. Supports multiple choice, true/false, fill-in-the-blank, and essay types.
+      </p>
+      <div class="tags">
+        <span class="tag rose">QTI Export</span>
+        <span class="tag blue">Quiz Import</span>
+        <span class="tag green">Question Banks</span>
+        <span class="tag violet">AI Generation</span>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-ghost" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-qti-test-generator-1.1-2-.user.js" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Install Script
+        </a>
+      </div>
+    </div>
+
+    <!-- Reports -->
+    <div class="card delay-11">
+      <div class="card-header">
+        <div class="icon sky">📊</div>
+        <div class="card-title-group">
+          <div class="card-name">Canvas Reports</div>
+          <div class="card-version">v6.0.2</div>
+        </div>
+      </div>
+      <p class="card-desc">
+        Adds a powerful reporting layer to Canvas with detailed analytics on student performance, assignment completion rates, grade distributions, and participation trends. Generate exportable reports as CSV or PDF, visualize class-wide data in charts, and identify at-risk students early — all without leaving your Canvas course.
+      </p>
+      <div class="tags">
+        <span class="tag sky">Analytics</span>
+        <span class="tag green">Grade Reports</span>
+        <span class="tag amber">CSV Export</span>
+        <span class="tag rose">At-Risk Alerts</span>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-ghost" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-reports-6.0.2-1-.user.js" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Install Script
+        </a>
+      </div>
+    </div>
+
+    <!-- Scheduler -->
+    <div class="card delay-12">
+      <div class="card-header">
+        <div class="icon teal">🗓️</div>
+        <div class="card-title-group">
+          <div class="card-name">Canvas Scheduler</div>
+          <div class="card-version">v1.0.0</div>
+        </div>
+      </div>
+      <p class="card-desc">
+        A smart scheduling assistant that overlays a visual calendar interface on Canvas. Lets you drag-and-drop assignments, announcements, and discussions to reschedule them in bulk, set recurring reminders, and view your full course timeline at a glance. Syncs changes back to Canvas automatically, saving you from navigating dozens of individual assignment settings pages.
+      </p>
+      <div class="tags">
+        <span class="tag teal">Calendar View</span>
+        <span class="tag blue">Drag &amp; Drop</span>
+        <span class="tag green">Bulk Reschedule</span>
+        <span class="tag amber">Reminders</span>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-ghost" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-scheduler-1.0.0.user.js" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Install Script
+        </a>
+      </div>
+    </div>
+
+    <!-- Teacher Evaluation Tool -->
+    <div class="card delay-12">
+      <div class="card-header">
+        <div class="icon orange">🏅</div>
+        <div class="card-title-group">
+          <div class="card-name">Canvas Teacher Evaluation Tool</div>
+          <div class="card-version">v1.1.0</div>
+        </div>
+      </div>
+      <p class="card-desc">
+        Streamlines peer and administrative teacher evaluations conducted through Canvas. Provides structured observation forms, weighted rubric scoring, narrative feedback fields, and automatic report generation. Results are compiled into professional evaluation summaries that can be shared with administrators or used for self-reflection and professional development planning.
+      </p>
+      <div class="tags">
+        <span class="tag orange">Evaluation</span>
+        <span class="tag blue">Rubric Scoring</span>
+        <span class="tag violet">PD Reports</span>
+        <span class="tag green">Admin Ready</span>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-ghost" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-teacher-evaluation-tool-1.1.0.user.js" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Install Script
+        </a>
+      </div>
+    </div>
+
+  </div><!-- end step 3 -->
+
+  <footer>
+    <p>Canvas AI Tools Suite &nbsp;·&nbsp; Open the install links in your browser with Tampermonkey active</p>
+  </footer>
+
+</div>
+</body>
+</html>
