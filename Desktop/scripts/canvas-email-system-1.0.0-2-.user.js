@@ -10,8 +10,8 @@
 // @grant        GM_getValue
 // @grant        GM_addStyle
 // @run-at       document-idle
-// @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/Canvas%20Email%20System-1.0.0%20(2).user.js
-// @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/Canvas%20Email%20System-1.0.0%20(2).user.js
+// @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-email-system-1.0.0-2-.user.js
+// @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-email-system-1.0.0-2-.user.js
 // ==/UserScript==
 
 (function () {

@@ -19,8 +19,8 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js
 // @connect      api.anthropic.com
 // @run-at       document-idle
-// @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/Canvas%20AI%20Module%20Builder%20(Direct%20API%20Insert)-4.0.0%20(3).user.js
-// @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/Canvas%20AI%20Module%20Builder%20(Direct%20API%20Insert)-4.0.0%20(3).user.js
+// @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-ai-module-builder-direct-api-insert-4.0.0-3-.user.js
+// @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-ai-module-builder-direct-api-insert-4.0.0-3-.user.js
 // ==/UserScript==
 
 (function () {

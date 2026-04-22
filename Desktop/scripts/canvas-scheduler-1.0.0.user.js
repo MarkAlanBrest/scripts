@@ -10,8 +10,8 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @run-at       document-idle
-// @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/Canvas%20Scheduler-1.0.0.user.js
-// @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/Canvas%20Scheduler-1.0.0.user.js
+// @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-scheduler-1.0.0.user.js
+// @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-scheduler-1.0.0.user.js
 // ==/UserScript==
 
 (function () {

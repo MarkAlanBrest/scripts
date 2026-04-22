@@ -11,8 +11,8 @@
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @run-at       document-start
-// @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/Canvas%20Tool%20Dashboard%20(Compact%20Premium%20UI%20%2B%20AI%20Popups%20%2B%20Backup-Restore)-4.3.1.user.js
-// @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/Canvas%20Tool%20Dashboard%20(Compact%20Premium%20UI%20%2B%20AI%20Popups%20%2B%20Backup-Restore)-4.3.1.user.js
+// @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-tool-dashboard-compact-premium-ui-ai-popups-backup-restore-4.3.1.user.js
+// @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-tool-dashboard-compact-premium-ui-ai-popups-backup-restore-4.3.1.user.js
 // ==/UserScript==
 
 (function () {

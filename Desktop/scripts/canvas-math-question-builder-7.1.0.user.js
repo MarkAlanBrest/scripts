@@ -12,8 +12,8 @@
 // @grant        GM_getValue
 // @connect      api.anthropic.com
 // @run-at       document-idle
-// @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/Canvas%20Math%20Question%20Builder-7.1.0.user.js
-// @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/Canvas%20Math%20Question%20Builder-7.1.0.user.js
+// @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-math-question-builder-7.1.0.user.js
+// @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-math-question-builder-7.1.0.user.js
 // ==/UserScript==
 
 (function () {
