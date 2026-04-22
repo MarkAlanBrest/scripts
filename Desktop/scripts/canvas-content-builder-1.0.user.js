@@ -10,8 +10,8 @@
 // @grant        GM_deleteValue
 // @connect      api.anthropic.com
 // @run-at       document-idle
-// @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-content-builder-1.0.user.js
-// @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-content-builder-1.0.user.js
+// @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/Canvas%20Content%20Builder-1.0.user.js
+// @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/Canvas%20Content%20Builder-1.0.user.js
 // ==/UserScript==
 
 (function () {

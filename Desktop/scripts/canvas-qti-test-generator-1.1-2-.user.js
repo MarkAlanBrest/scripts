@@ -9,8 +9,8 @@
 // @grant        GM_xmlhttpRequest
 // @connect      api.anthropic.com
 // @run-at       document-idle
-// @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-qti-test-generator-1.1-2-.user.js
-// @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-qti-test-generator-1.1-2-.user.js
+// @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/Canvas%20QTI%20Test%20Generator-1.1%20(2).user.js
+// @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/Canvas%20QTI%20Test%20Generator-1.1%20(2).user.js
 // ==/UserScript==
 
 (function () {

@@ -13,8 +13,8 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js
 // @connect      api.anthropic.com
 // @run-at       document-idle
-// @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/aigrader-claude-edition-5.2.user.js
-// @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/aigrader-claude-edition-5.2.user.js
+// @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/AIgrader%20%E2%80%94%20Claude%20Edition-5.2.user.js
+// @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/AIgrader%20%E2%80%94%20Claude%20Edition-5.2.user.js
 // ==/UserScript==
 
 (function () {

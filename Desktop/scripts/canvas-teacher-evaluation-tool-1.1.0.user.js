@@ -13,8 +13,8 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @run-at       document-idle
-// @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-teacher-evaluation-tool-1.1.0.user.js
-// @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-teacher-evaluation-tool-1.1.0.user.js
+// @downloadURL  https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/Canvas%20Teacher%20Evaluation%20Tool-1.1.0.user.js
+// @updateURL    https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/Canvas%20Teacher%20Evaluation%20Tool-1.1.0.user.js
 // ==/UserScript==
 
 (function () {
