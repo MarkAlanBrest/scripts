@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Canvas Tool Scripts Installer</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5d6d7e;
+      --line: #d6dbdf;
+      --paper: #ffffff;
+      --wash: #f4f7f9;
+      --canvas: #b5281a;
+      --canvas-dark: #7f1d13;
+      --blue: #1f6feb;
+      --blue-dark: #154ea8;
+      --green: #166534;
+      --shadow: 0 12px 32px rgba(23, 32, 42, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: var(--wash);
+      line-height: 1.5;
+    }
+
+    .topbar {
+      background: var(--canvas);
+      color: #fff;
+      border-bottom: 5px solid var(--canvas-dark);
+    }
+
+    .topbar-inner {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 24px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      align-items: center;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(28px, 5vw, 46px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 0;
+      max-width: 720px;
+      color: #ffe8e4;
+      font-size: 17px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 10px 16px;
+      border: 0;
+      border-radius: 6px;
+      color: #fff;
+      background: var(--blue);
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    }
+
+    .button:hover,
+    .button:focus {
+      background: var(--blue-dark);
+    }
+
+    .button.secondary {
+      background: #fff;
+      color: var(--canvas-dark);
+    }
+
+    .button.secondary:hover,
+    .button.secondary:focus {
+      background: #f8d7d1;
+    }
+
+    main {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 44px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .step {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(23, 32, 42, 0.06);
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--canvas-dark);
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 28px 0 14px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: 0;
+    }
+
+    .hint {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .script-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .script {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: 0 2px 8px rgba(23, 32, 42, 0.06);
+      display: grid;
+      gap: 12px;
+    }
+
+    .script.recommended {
+      border-color: #c7a74b;
+      box-shadow: var(--shadow);
+    }
+
+    .script h3 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .script p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .badge {
+      width: max-content;
+      border-radius: 999px;
+      padding: 3px 9px;
+      background: #fff3c4;
+      color: #6b4f00;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .install {
+      background: var(--green);
+    }
+
+    .install:hover,
+    .install:focus {
+      background: #0f4a26;
+    }
+
+    .raw-link {
+      color: var(--blue);
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      margin-top: 30px;
+      padding-top: 18px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 820px) {
+      .topbar-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .steps,
+      .script-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        display: block;
+      }
+
+      .hint {
+        margin-top: 6px;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div>
+        <h1>Canvas Tool Scripts</h1>
+        <p class="subtitle">Install browser tools for Canvas LMS. Start with Tampermonkey, then install the scripts you need.</p>
+      </div>
+      <a class="button secondary" href="https://www.tampermonkey.net/" target="_blank" rel="noopener">Install Tampermonkey</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="steps" aria-label="Install steps">
+      <div class="step">
+        <strong>1. Install Tampermonkey</strong>
+        <p>Use the button at the top of this page and install the extension for your browser.</p>
+      </div>
+      <div class="step">
+        <strong>2. Click a script</strong>
+        <p>Each green install button opens Tampermonkey's script install screen.</p>
+      </div>
+      <div class="step">
+        <strong>3. Refresh Canvas</strong>
+        <p>After installing, reload Canvas so the new tools can appear.</p>
+      </div>
+    </section>
+
+    <div class="section-head">
+      <h2>Recommended First</h2>
+      <p class="hint">Install the dashboard first if you plan to use multiple tools.</p>
+    </div>
+
+    <section class="script-grid" aria-label="Recommended script">
+      <article class="script recommended">
+        <span class="badge">Recommended</span>
+        <h3>Canvas Tool Dashboard</h3>
+        <p>Collapsible bottom toolbar with compact UI, AI popups, and per-script backup and restore.</p>
+        <div class="actions">
+          <a class="button install" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-tool-dashboard-compact-premium-ui-ai-popups-backup-restore-4.3.1.user.js">Install Script</a>
+          <a class="raw-link" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-tool-dashboard-compact-premium-ui-ai-popups-backup-restore-4.3.1.user.js">raw file</a>
+        </div>
+      </article>
+    </section>
+
+    <div class="section-head">
+      <h2>Available Scripts</h2>
+      <p class="hint">Install only the tools you want to use.</p>
+    </div>
+
+    <section class="script-grid" aria-label="Canvas userscripts">
+      <article class="script">
+        <h3>AIgrader - Claude Edition</h3>
+        <p>Grades Canvas submissions using Claude AI directly in SpeedGrader.</p>
+        <div class="actions">
+          <a class="button install" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/aigrader-claude-edition-5.2.user.js">Install Script</a>
+          <a class="raw-link" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/aigrader-claude-edition-5.2.user.js">raw file</a>
+        </div>
+      </article>
+
+      <article class="script">
+        <h3>Canvas AI Module Builder</h3>
+        <p>Builds and inserts modules, pages, assignments, and quizzes directly through the Canvas API.</p>
+        <div class="actions">
+          <a class="button install" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-ai-module-builder-direct-api-insert-4.0.0-3-.user.js">Install Script</a>
+          <a class="raw-link" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-ai-module-builder-direct-api-insert-4.0.0-3-.user.js">raw file</a>
+        </div>
+      </article>
+
+      <article class="script">
+        <h3>Canvas Content Builder</h3>
+        <p>AI-powered Canvas page and assignment HTML generator.</p>
+        <div class="actions">
+          <a class="button install" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-content-builder-1.0.user.js">Install Script</a>
+          <a class="raw-link" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-content-builder-1.0.user.js">raw file</a>
+        </div>
+      </article>
+
+      <article class="script">
+        <h3>Canvas Math Question Builder</h3>
+        <p>AI-powered math question builder for Canvas Classic Quizzes.</p>
+        <div class="actions">
+          <a class="button install" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-math-question-builder-7.1.0.user.js">Install Script</a>
+          <a class="raw-link" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-math-question-builder-7.1.0.user.js">raw file</a>
+        </div>
+      </article>
+
+      <article class="script">
+        <h3>Canvas QTI Test Generator</h3>
+        <p>AI-powered QTI quiz generator for Canvas LMS.</p>
+        <div class="actions">
+          <a class="button install" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-qti-test-generator-1.1-2-.user.js">Install Script</a>
+          <a class="raw-link" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-qti-test-generator-1.1-2-.user.js">raw file</a>
+        </div>
+      </article>
+
+      <article class="script">
+        <h3>Canvas Email System</h3>
+        <p>Pulls student data from Canvas and generates personalized emails or announcements.</p>
+        <div class="actions">
+          <a class="button install" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-email-system-1.0.0-2-.user.js">Install Script</a>
+          <a class="raw-link" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-email-system-1.0.0-2-.user.js">raw file</a>
+        </div>
+      </article>
+
+      <article class="script">
+        <h3>Canvas Email Storage Center</h3>
+        <p>Quick-send pre-written emails in Canvas Conversations.</p>
+        <div class="actions">
+          <a class="button install" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-email-storage-center-4.0-2-.user.js">Install Script</a>
+          <a class="raw-link" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-email-storage-center-4.0-2-.user.js">raw file</a>
+        </div>
+      </article>
+
+      <article class="script">
+        <h3>Canvas Reports</h3>
+        <p>Creates at-risk reports, printable class reports, and student support guides.</p>
+        <div class="actions">
+          <a class="button install" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-reports-6.0.2-1-.user.js">Install Script</a>
+          <a class="raw-link" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-reports-6.0.2-1-.user.js">raw file</a>
+        </div>
+      </article>
+
+      <article class="script">
+        <h3>Canvas Scheduler</h3>
+        <p>Drag Canvas assignments, discussions, and quizzes onto weekday due dates and publish the schedule back to Canvas.</p>
+        <div class="actions">
+          <a class="button install" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-scheduler-1.0.0.user.js">Install Script</a>
+          <a class="raw-link" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-scheduler-1.0.0.user.js">raw file</a>
+        </div>
+      </article>
+
+      <article class="script">
+        <h3>Canvas Teacher Evaluation Tool</h3>
+        <p>Data-driven teacher and course evaluation dashboard for Canvas LMS admins.</p>
+        <div class="actions">
+          <a class="button install" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-teacher-evaluation-tool-1.1.0.user.js">Install Script</a>
+          <a class="raw-link" href="https://raw.githubusercontent.com/MarkAlanBrest/scripts/main/canvas-teacher-evaluation-tool-1.1.0.user.js">raw file</a>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      <p>If a script opens as plain text instead of the Tampermonkey install screen, confirm Tampermonkey is installed and enabled, then click the install link again.</p>
+    </footer>
+  </main>
+</body>
+</html>
